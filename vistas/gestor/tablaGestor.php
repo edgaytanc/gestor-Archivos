@@ -30,7 +30,7 @@ $result = mysqli_query($conexion, $sql);
                     <tr>
                         <th>Carpetas</th>
                         <th>Nombre</th>
-                        <th>Tipo de archivo</th>
+                        <th>Extensión de archivo</th>
                         <th>Descargar</th>
                         <th>Visualizar</th>
                         <th>Eliminar</th>
@@ -38,6 +38,12 @@ $result = mysqli_query($conexion, $sql);
                 </thead>
                 <tbody>
                     <?php
+
+                    /*
+                            Arreglo de extensiones validas
+                        */
+                    $extensionesValidas = array('png', 'jpg', 'pdf', 'mp3', 'mp4');
+
                     while ($mostrar = mysqli_fetch_array($result)) {
                         $rutaDescarga = "../../archivos/" . $idUsuario . "/" . $mostrar['nombreArchivo'];
                         $nombreArchivo = $mostrar['nombreArchivo'];
@@ -50,9 +56,22 @@ $result = mysqli_query($conexion, $sql);
                             <td>
                                 <a href="<?php echo $rutaDescarga; ?>" download="<?php $nombreArchivo; ?>" class="btn btn-success btn-sm"><span class="fa-solid fa-download"></span></a>
                             </td>
-                            <td><span class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#visualizarArchivo" onclick=" obtenerArchivoPorId('<?php echo $idArchivo ?>')">
-                                    <span class="fa-solid fa-eye"></span>
-                                </span></td>
+                            <td>
+                                <?php
+                                for ($i = 0; $i < count($extensionesValidas); $i++) {
+                                    if ($extensionesValidas[$i] == $mostrar['tipoArchivo']) {
+                                ?>
+                                        <span class="btn btn-primary btn-sm" 
+                                              data-bs-toggle="modal" 
+                                              data-bs-target="#visualizarArchivo" 
+                                              onclick=" obtenerArchivoPorId('<?php echo $idArchivo ?>')">
+                                            <span class="fa-solid fa-eye"></span>
+                                        </span>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </td>
                             <td>
                                 <span class="btn btn-danger btn-sm" onclick="eliminarArchivo('<?php echo $idArchivo; ?>')">
                                     <sapn class="fa-solid fa-trash">
